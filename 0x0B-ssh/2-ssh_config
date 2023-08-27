@@ -1,0 +1,11 @@
+# This is the SSH Client config file
+	Host quantum-server
+			User ubuntu
+			HostName 100.26.238.151
+			IdentityFile ~/.ssh/school
+			PasswordAuthentication no
+			IdentitiesOnly yes
+			PreferredAuthentications publickey
+			HashKnownHosts yes
+			GSSAPIAuthentication yes
+			GSSAPIDelegateCredentials no
