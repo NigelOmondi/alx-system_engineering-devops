@@ -1,5 +1,5 @@
 # Add SSH client configuration lines
-if $facts['networking']['hostname'] == 'quantum-server' {
+# if $facts['networking']['hostname'] == 'quantum-server' {
   file_line { 'Turn off passwd auth':
     ensure => present,
     path   => '/etc/ssh/ssh_config',
@@ -16,4 +16,4 @@ if $facts['networking']['hostname'] == 'quantum-server' {
   notify { 'SSH configuration updated':
     message => 'Your SSH client configuration has been updated.',
   }
-}
+#}
