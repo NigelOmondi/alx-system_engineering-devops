@@ -13,7 +13,7 @@ printf %s "server {
     root /etc/nginx/html;
     index index.html index.htm;
     location /redirect_me {
-        retun 301 https://nigelomondi.github.io/portfolio/;
+        return 301 https://nigelomondi.github.io/portfolio/;
     }
 }" > /etc/nginx/sites-enabled/default
 
