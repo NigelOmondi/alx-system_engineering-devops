@@ -1,5 +1,5 @@
 # This Puppet Manifest installs and configures Nginx server
-exec { 'fetch nginx from official repo':
+exec { 'add nginx official repo':
   command => 'sudo add-apt-repository ppa:nginx/stable',
   path    => 'usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
 }
@@ -12,13 +12,14 @@ exec { 'update packages':
 
 # Install nginx web server
 package { 'nginx':
-  ensure => installed,
+  ensure => 'installed',
 }
 
 # allow HTTP protocol connetions
-exec { 'allow http':
+exec { 'allow HTTP':
   command => 'ufw allow "Nginx HTTP"',
   path    => 'usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+  onlyif  => '! dpkg -l nginx | egrep \'îi.*nginx\' > /dev/null 2>&1',
 }
 
 # Change folder permissions
@@ -34,29 +35,29 @@ file { '/var/www/html/index.html':
 
 # create another index
 file { 'var/www/html/404.html':
-  content => 'Ceci n'est pas une page\n',
+  content => "Ceci n'est pas une page\n",
 }
 
 # Add a redirection and error page
 file {'Nginx default config':
-  ensure   => file,
-  path     => '/etc/nginx/sites-enabled/default',
-  content  => 
-   "server {
+  ensure  => 'file',
+  path    => '/etc/nginx/sites-enabled/default',
+  content => "server {
         listen 80 default server;
+        listen [::]:80 default_server;
         root /var/www/html;
         index index.html index.htm index.nginx-debian.html;
         server_name _;
         location / {
             try_files \$uri \$uri/ =404;
         }
-        error_page /404 /404.html;
+        error_page 404 /404.html;
         location /404.html {
             internal;
         }
 
         if (\$request_filaname ~ redirect_me) {
-            rewrite ^ https:www.youtube.com/watch/v=QHZ-TGUwu4 permanent)
+            rewrite ^ https:www.youtube.com/watch/v=QHZ-TGUwu4 permanent;
         }
 
     }",
@@ -64,12 +65,12 @@ file {'Nginx default config':
 
 # restart nginx
 exec { 'restart service':
-  command => 'sudo service nginx restart"
+  command => 'sudo service nginx restart',
   path    => '/usr/bin:/usr/sbin:/bin',
 }
 
 # start service engine website
-service { "engine x":
+service { 'engine x':
   ensure  => running,
   require => Package['nginx'],
 }
