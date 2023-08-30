@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
+# Configure Nginx server to have a custom
+# 404 page.
 sudo apt-get update
 sudo apt-get install -y nginx
 
 mkdir /etc/nginx/html
 echo "Hello World!" > /etc/nginx/html/index.html
-echo "Ceci n'est pas une page" >/etc/nginx/html/404.html
+echo "Ceci n'est pas une page" > /etc/nginx/html/404.html
 
-print %s "server {
+printf %s "server {
     listen 80;
     listen [::]:80 default_server;
     root   /etc/nginx/html;
@@ -20,4 +22,5 @@ print %s "server {
         internal;
     }
 }" > /etc/nginx/sites-enabled/default
+
 sudo service nginx restart
