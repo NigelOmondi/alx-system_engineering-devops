@@ -1,24 +1,48 @@
-# Install and configure HAProxy to manage web-01 and web-02 servers.
-sudo apt-get update
+#!/usr/bin/env bash
 
+# Update the package lists and install HAProxy
+sudo apt-get update
 sudo apt-get install -y haproxy
 
-# Configure HAProxy for load balancing
-loadbalancer_config=\
-"
-front-end lb-frontend
+# Configure HAProxy
+cat <<EOF | sudo tee /etc/haproxy/haproxy.cfg
+global
+    log 127.0.0.1 local0 notice
+    maxconn 2000
+    user haproxy
+    group haproxy
+
+
+defaults
+    log   global
+    mode  http
+    option httplog
+    option dontlognull
+    retries 3
+    option redispatch
+    timeout connect 5000
+    timeout client 10000
+    timeout server 10000
+
+frontend lb-frontend
     bind *:80
-    mode http
     default_backend lb-backend
+
 
 backend lb-backend
     balance roundrobin
     server web-01 100.26.238.151:80 check
-    server web_02 100.25.183.127:80 check
-" > /etc/haproxy/haproxy.cfg
-# Enable proxy in the init haproxy
+    server web-02 100.25.183.127:80 check
+EOF
+
+# Enable HAProxy as a service
 sudo systemctl enable haproxy
-# Restart HAProxy
-sudo systemctl restart haproxy
-# Ensure HAProxy service is running
+
+# Start HAProxy
+sudo systemctl start haproxy
+
+# Ensure HAProxy is running
 sudo systemctl status haproxy
+
+# Output server information
+echo "HAProxy is installed and configured to distribute traffic to web-01 and web-02 using a round-robin algorithm."
