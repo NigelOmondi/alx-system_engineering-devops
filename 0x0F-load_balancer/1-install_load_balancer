@@ -44,4 +44,4 @@ sudo systemctl start haproxy
 sudo systemctl status haproxy
 
 # Output server information
-echo "HAProxy is configured to use a round-robin algorithm."
+# echo "HAProxy is configured to use a round-robin algorithm."
