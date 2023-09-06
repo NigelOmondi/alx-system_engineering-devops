@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Setup environment for a new docker image
+apt-get update
+
+# Install Nginx
+apt-get install -y nginx
+
+# Add dependency packages
+apt-get install systemctl -y 
+apt-get install -y curl
+apt-get install -y vim
+
+# Start nginx
+systemctl start nginx
+
+# Check status of nginx
+systemctl status nginx
