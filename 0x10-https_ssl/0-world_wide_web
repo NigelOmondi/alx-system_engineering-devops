@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Configure domain zone so that subdomain www points to load balancer
+
+# Check if both domain and subdomain arguments are provided
+if [ $# -eq 0 ] || [ $# -gt 2 ]; then
+    echo "Usage: $0 <domain> [subdomain]"
+    exit 1
+fi
+
+domain="$1"
+subdomain="$2"
+
+
+# To display information about a subdomain
+display_subdomain_info() {
+    local subdomain="$1"
+    local ip
+    ip=$(dig +short "$subdomain.$domain" | awk 'NR==1 {print}')
+    if [ -n "$ip" ]; then
+        echo "The subdomain $subdomain is a A record and points to $ip"
+    else
+        echo "The subdomain $subdomain does not exist or is not configured"
+    fi
+}
+
+# Check if the given subdomain is empty or not in array
+if [ -n "$subdomain" ]; then
+    display_subdomain_info "$subdomain"
+else
+    # Display all subdomains' info in specified order
+    for subdomain in "www" "lb-01" "web-01" "web-02"; do
+        display_subdomain_info "$subdomain"
+    done
+fi
