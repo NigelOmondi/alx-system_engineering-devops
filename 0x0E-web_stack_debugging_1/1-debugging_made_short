@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # Debugging made shorter
-sudo unlink /etc/nginx/sites-enabled/default
-# Restart nginx
-sudo service nginx restart
-
+sed -i 's/8080/80/g' etc/nginx/sites-enabled/default
+sudo systemctl start nginx 
+sudo systemctl stop nginx
