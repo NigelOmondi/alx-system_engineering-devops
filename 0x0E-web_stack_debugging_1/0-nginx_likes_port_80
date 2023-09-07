@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 # Setup environment for a new docker image
-sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
-sudo systemctl reload nginx
+sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+sudo service nginx restart
