@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 # Debugging made shorter
 sed -i "s/8080/80/" /etc/nginx/sites-enabled/default
+sudo systemctl reload nginx
+pkill -o nginx
