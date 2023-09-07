@@ -1,5 +1,3 @@
 #!/usr/bin/env bash
 # Debugging made shorter
-ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-service nginx start
-kill "$(pgrep 'nginx' | head -1)"
+sed -i "s/8080/80/" /etc/nginx/sites-enabled/default
