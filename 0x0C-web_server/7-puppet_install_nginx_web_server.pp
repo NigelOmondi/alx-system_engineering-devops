@@ -3,48 +3,48 @@ package { 'nginx':
   ensure => 'installed',
 }
 
-# Configure the Nginx server block
-file { '/etc/nginx/sites-available/default':
-  ensure  => file,
-  content => "
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-    
-    root /var/www/html;
-    index index.html;
-    
-    location / {
-        try_files \$uri \$uri/ =404;
-        add_header Content-Type text/html;
-        echo 'Hello World!';
-    }
-    
-    location /redirect_me {
-        return 301 http://example.com;
-    }
-}
-  ",
-  require => Package['nginx'],
+# Allow HTTP traffic
+firewall { '100 allow http':
+  port   => 80,
+  proto  => 'tcp',
+  action => 'accept',
 }
 
-# Create the Hello World HTML file
-file { '/var/www/html/index.html':
-  ensure  => file,
+# Set up a basic Nginx site
+file { '/var/www/html/index.nginx-debian.html':
+  ensure  => 'file',
   content => 'Hello World!',
-  require => Package['nginx'],
 }
 
-# Create a symbolic link to enable the site
-file { '/etc/nginx/sites-enabled/default':
-  ensure => link,
-  target => '/etc/nginx/sites-available/default',
-  notify => Service['nginx'],
+# Configure Nginx server block
+file { '/etc/nginx/sites-available/default':
+  ensure  => 'file',
+  content => template('/etc/nginx/nginx.conf'),
 }
 
-# Ensure Nginx is running and enabled at boot
+# Enable the default server block
+exec { 'enable_default_site':
+  command => 'ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/',
+  creates => '/etc/nginx/sites-enabled/default',
+  require => File['/etc/nginx/sites-available/default'],
+}
+
+# Create a 301 redirect
+nginx::resource::server { 'default':
+  listen_options => 'default_server',
+  server_name    => '_',
+  location       => {
+    '/redirect_me' => {
+  ensure  => 'present',
+  rewrite => '^/redirect_me https://www.youtube.com/ permanent;',
+    },
+  },
+  require        => Package['nginx'],
+}
+
+# Restart Nginx
 service { 'nginx':
   ensure  => 'running',
   enable  => true,
-  require => [File['/etc/nginx/sites-enabled/default'], File['/var/www/html/index.html']],
+  require => [Package['nginx'], File['/etc/nginx/sites-available/default']],
 }
