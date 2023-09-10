@@ -39,14 +39,5 @@ backend lb-backend
     server web-02 100.25.183.127:80 check
 EOF
 
-# Enable HAProxy as a service
-sudo systemctl enable haproxy
-
-# Start HAProxy
-sudo systemctl start haproxy
-
-# Ensure HAProxy is running
-sudo systemctl status haproxy
-
-# Output server information
-# echo "HAProxy is configured to use a round-robin algorithm."
+# Restart haproxy service
+sudo service haproxy restart
