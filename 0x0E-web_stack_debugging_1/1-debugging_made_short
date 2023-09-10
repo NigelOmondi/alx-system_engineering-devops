@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 # Debugging made shorter
-sed -i 's/8080/80/g' etc/nginx/sites-enabled/default
-sudo systemctl start nginx 
-sudo systemctl stop nginx
+sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
+service nginx restart
+pkill -o nginx
