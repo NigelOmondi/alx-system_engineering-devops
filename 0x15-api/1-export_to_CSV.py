@@ -8,34 +8,25 @@ import requests
 import sys
 import csv
 
-
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        sys.exit(1)
+    # Retrieve user ID from CLI
+    user_id = sys.argv[1]
 
-    employee_id = sys.argv[1]
+    # Define the URL for the REST API
+    url = "https://jsonplaceholder.typicode.com/"
 
-    # Fetch user data
-    user_url = \
-        "https://jsonplaceholder.typicode.com/users/{}".format(employee_id)
-    user_response = requests.get(user_url)
-    user_data = user_response.json()
-    user_id = user_data.get("id")
-    employee_name = user_data.get("name")
+    # send a GET request to retrieve user info
+    user = requests.get(url + "users/{}".format(user_id)).json()
 
-    # Fetch TODO list data
-    todo_url = "https://jsonplaceholder.typicode.com/todos?userId={}"\
-        .format(employee_id)
-    todo_response = requests.get(todo_url)
-    todo_data = todo_response.json()
+    # get the username of the user
+    username = user.get("username")
 
-    # Create and write to CSV file
-    csv_filename = "{}.csv".format(user_id)
-    with open(csv_filename, mode="w", newline="") as csv_file:
-        csv_writer = csv.writer(csv_file, quoting=csv.QUOTE_ALL)
-        for task in todo_data:
-            task_id = task.get("id")
-            completed = task.get("completed")
-            task_title = task.get("title")
-            csv_writer.writerow([user_id, employee_name,
-                                 completed, task_title])
+    # send a GET request to retrive the TODO list
+    todos = requests.get(url + "todos", params={"userId": user_id}).json()
+
+    # open a CSV file for writing
+    with open("{}.csv".format(user_id), "w", newline="") as csvfile:
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        [writer.writerow(
+            [user_id, username, t.get("completed"), t.get("title")]
+        ) for t in todos]
