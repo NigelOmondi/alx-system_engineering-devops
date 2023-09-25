@@ -39,5 +39,3 @@ if __name__ == "__main__":
             task_title = task.get("title")
             csv_writer.writerow([user_id, employee_name,
                                  completed, task_title])
-
-    print("CSV file '{}' has been created.".format(csv_filename))
