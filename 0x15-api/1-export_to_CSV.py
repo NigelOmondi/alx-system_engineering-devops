@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 """Exports fetched data intoa  CSV format"""
 
-import requests
-import sys
+from requests import get
+from sys import argv
 
 
 if __name__ == '__main__':
