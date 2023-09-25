@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""
-Python script that fetches data from a REST API for a given employee ID
+"""Python script that fetches data from a REST API for a given employee ID
 and displays information about their TODO list progress.
 """
 
