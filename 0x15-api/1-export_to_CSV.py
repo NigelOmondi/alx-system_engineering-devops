@@ -8,6 +8,7 @@ import requests
 import sys
 import csv
 
+
 if __name__ == "__main__":
     # Retrieve user ID from CLI
     user_id = sys.argv[1]
