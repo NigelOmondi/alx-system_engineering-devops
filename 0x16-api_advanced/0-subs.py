@@ -3,6 +3,7 @@
 import requests
 import sys
 
+
 def number_of_subscribers(subreddit):
     """Finding total number of subscribers"""
     url = f"https://www.reddit.com/r/{subreddit}/about.json"
@@ -14,7 +15,8 @@ def number_of_subscribers(subreddit):
         data = response.json()
         return data['data']['subscribers']
     else:
-        return 0 #Invalid subreddit
+        return 0  # Invalid subreddit
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
